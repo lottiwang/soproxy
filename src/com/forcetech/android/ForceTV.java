@@ -25,6 +25,7 @@ public class ForceTV {
     private Context context = null;
     private boolean p2pIsStart = false;
     private final static int tcpport = 9906;
+    private final static int tcpportold = tcpport+1;
     private final static int pool20M = 20971520;
     private final static String local = "0.0.0.0:";
     private final static String cmdNetstat = "netstat";
@@ -34,6 +35,7 @@ public class ForceTV {
     static {
         try {
             System.loadLibrary("forcetv");
+            System.loadLibrary("SOProxy");
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
@@ -54,6 +56,7 @@ public class ForceTV {
                 if (str == null) {
                     if (!this.p2pIsStart)
                         Log.d(TAG, String.valueOf(startClient(tcpport, pool20M)));
+                    	Log.d(TAG, String.valueOf(startOldClient(tcpportold, pool20M)));
                     return;
                 }
                 if (str.contains(new StringBuffer(local).append(tcpport).toString())) {
@@ -79,10 +82,31 @@ public class ForceTV {
 //        }
         return stop();
     }
+    
+    
+    public int startOldClient(int protNo, int pool_size) {
+//      if (mP2PServer != null)
+//          mP2PServer.startServer();
+      return start(protNo, pool_size);
+  }
+
+  public int stopOldClient() {
+//      if (mP2PServer != null) {
+//          mP2PServer.stopServer();
+//          mP2PServer = null;
+//      }
+      return stop();
+  }
+    
 
     private native int start(int protNo, int pool_size);
 
     private native int stop();
+    
+    private native int startold(int protNo, int pool_size);
+
+    private native int stopold();
+    
 
 
     /**
